@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 import 'package:path_provider/path_provider.dart';
@@ -35,32 +33,26 @@ class _DownloaderPageState extends State<DownloaderPage> {
               IconButton(
                 onPressed: () async {
 
-                  final uri = Uri.https('56ae-62-217-191-21.eu.ngrok.io', '/YandexMusic/GetSongById/', {'idSong': '89287667'});
+                  final uri = Uri.https('32fd-62-217-191-21.eu.ngrok.io', '/YandexMusic/GetSongById/', {'idSong': '89287667'});
+
                   var response = await http.get(uri);
-                  var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-                  var decode = utf8.decode(response.bodyBytes);
+                  
+                  
+                  var decodedResponse = jsonDecode(response.body);
 
                   var name = decodedResponse["name"];
                   var data = decodedResponse["data"];
-                  List<int> bytes = utf8.encode(data);
 
-                  var appDocDir = await getApplicationDocumentsDirectory();
-                  String appDocPath = appDocDir.path;
-                  var file = new File('$appDocPath\\test123.mp3');
-                  file.writeAsBytes(bytes, flush: true);
-
-                  /*List<int> dataB = utf8.encode(data);
-                  Uint8List bytes = Uint8List.fromList(dataB);
-                  ByteData byteData = ByteData.sublistView(bytes);
-                  int value = byteData.getUint16(0, Endian.big);
-
+                  var bytes = utf8.encode(data);
+                  var base64 = base64Decode(data);
 
 
                   var appDocDir = await getApplicationDocumentsDirectory();
                   String appDocPath = appDocDir.path;
                   var file = new File('$appDocPath\\$name.mp3');
-                  file.writeAsBytes(bytes);
-                  var str = "";*/
+
+
+                  file.writeAsBytes(base64);
                 },
                 icon: Icon(Icons.download),
               )
