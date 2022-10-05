@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:player/player.dart';
 
 import 'downloader_page.dart';
+import 'list_songs.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const DownloaderPage(),
+      home: const Player(),
     );
   }
 }
