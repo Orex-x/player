@@ -26,7 +26,7 @@ class _PlayerState extends State<Player> {
   void initState() {
     super.initState();
 
-    setAudio();
+    //setAudio();
 
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {

@@ -11,14 +11,12 @@ class ListSongs extends StatefulWidget {
 }
 
 class _ListSongsState extends State<ListSongs> {
-
   void _listofFiles() async {
     var directory = (await getExternalStorageDirectory())!.path;
     setState(() {
-     var file = io.Directory("$directory/music/").listSync();
+      var file = io.Directory("$directory/music/").listSync();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,6 @@ class _ListSongsState extends State<ListSongs> {
         type: MaterialType.transparency,
         child: Container(
           child: SizedBox(
-            height: 40,
             child: _buildMainColumn(),
           ),
         ),
@@ -36,7 +33,7 @@ class _ListSongsState extends State<ListSongs> {
   }
 }
 
-Widget _buildMainColumn() => Column(
+Widget _buildMainColumn() => ListView(
       children: [
         _buildSongItem('Sweet Memories', 'December 29 Pre-Launch',
             Color.fromARGB(255, 47, 128, 23)),
@@ -90,7 +87,7 @@ Widget _buildSongItem(String title, String description, Color color) =>
           Container(
             width: 30,
             alignment: Alignment.centerRight,
-            child: Image.asset('source/images/dots.png'),
+            child: Icon(Icons.menu),
           ),
         ],
       ),
