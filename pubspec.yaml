@@ -38,7 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   #play audio
-  audioplayers: ^0.20.1
+  audioplayers: ^1.1.1
 
   #file picker
   file_picker: ^4.5.1

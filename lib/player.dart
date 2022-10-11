@@ -3,6 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import 'models/data.dart';
+
 class Player extends StatefulWidget {
   const Player({super.key});
 
@@ -11,14 +13,9 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
-  final audioPlayer = AudioPlayer();
-  bool isPlaying = false;
-  Duration duration = Duration.zero;
-  Duration position = Duration.zero;
-
   @override
   void dispose() {
-    audioPlayer.dispose();
+    //Data.audioPlayer.dispose();
     super.dispose();
   }
 
@@ -26,33 +23,26 @@ class _PlayerState extends State<Player> {
   void initState() {
     super.initState();
 
-    //setAudio();
-
-    audioPlayer.onPlayerStateChanged.listen((state) {
+    Data.audioPlayer.onPlayerStateChanged.listen((state) {
+      if (!mounted) return;
       setState(() {
-        isPlaying = state == PlayerState.PLAYING;
+        Data.isPlaying = state == PlayerState.playing;
       });
     });
-    audioPlayer.onDurationChanged.listen((newDuration) {
+    Data.audioPlayer.onDurationChanged.listen((newDuration) {
+      if (!mounted) return;
       setState(() {
-        duration = newDuration;
+        Data.duration = newDuration;
       });
     });
-    audioPlayer.onAudioPositionChanged.listen((newPosition) {
+    Data.audioPlayer.onPositionChanged.listen((newPosition) {
+      if (!mounted) return;
       setState(() {
-        position = newPosition;
+        Data.position = newPosition;
       });
     });
   }
 
-  Future setAudio() async {
-    audioPlayer.setReleaseMode(ReleaseMode.LOOP);
-    final result = await FilePicker.platform.pickFiles();
-    if(result != null){
-      final file = File(result.files.single.path!);
-      audioPlayer.setUrl(file.path, isLocal: true);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,13 +78,13 @@ class _PlayerState extends State<Player> {
               ),
               Slider(
                 min: 0,
-                max: duration.inSeconds.toDouble(),
-                value: position.inSeconds.toDouble(),
+                max: Data.duration.inSeconds.toDouble(),
+                value: Data.position.inSeconds.toDouble(),
                 onChanged: (value) async {
                   final position = Duration(seconds: value.toInt());
-                  await audioPlayer.seek(position);
-
-                  await audioPlayer.resume();
+                  if (!mounted) return;
+                  await Data.audioPlayer.seek(position);
+                  await Data.audioPlayer.resume();
                 },
               ),
               Padding(
@@ -104,21 +94,24 @@ class _PlayerState extends State<Player> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(formatTime(position)),
-                    Text(formatTime(duration - position)),
+                    Text(formatTime(Data.position)),
+                    Text(formatTime(Data.duration - Data.position)),
                   ],
                 ),
               ),
               CircleAvatar(
                 radius: 35,
                 child: IconButton(
-                  icon: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+                  icon: Data.isPlaying
+                      ? Icon(Icons.pause)
+                      : Icon(Icons.play_arrow),
                   iconSize: 50,
                   onPressed: () async {
-                    if (isPlaying) {
-                      await audioPlayer.pause();
+                    if (!mounted) return;
+                    if (Data.isPlaying) {
+                      await Data.audioPlayer.pause();
                     } else {
-                      await audioPlayer.resume();
+                      await Data.audioPlayer.resume();
                     }
                   },
                 ),

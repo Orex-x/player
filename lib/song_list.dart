@@ -1,7 +1,10 @@
 import 'dart:ffi';
 import 'dart:io' as io;
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'models/data.dart';
 
 class ListSongs extends StatefulWidget {
   const ListSongs({super.key});
@@ -11,10 +14,38 @@ class ListSongs extends StatefulWidget {
 }
 
 class _ListSongsState extends State<ListSongs> {
-  void _listofFiles() async {
-    var directory = (await getExternalStorageDirectory())!.path;
+  List<io.FileSystemEntity> listSongs = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    Data.audioPlayer.onPlayerStateChanged.listen((state) {
+      if (!mounted) return;
+      setState(() {
+        Data.isPlaying = state == PlayerState.playing;
+      });
+    });
+    Data.audioPlayer.onDurationChanged.listen((newDuration) {
+      if (!mounted) return;
+      setState(() {
+        Data.duration = newDuration;
+      });
+    });
+    Data.audioPlayer.onPositionChanged.listen((newPosition) {
+      if (!mounted) return;
+      setState(() {
+        Data.position = newPosition;
+      });
+    });
+
+    setList();
+  }
+
+  void setList() async {
+    var data = await Data.listofFiles();
     setState(() {
-      var file = io.Directory("$directory/music/").listSync();
+      listSongs = data;
     });
   }
 
@@ -23,28 +54,23 @@ class _ListSongsState extends State<ListSongs> {
     return Scaffold(
       body: Material(
         type: MaterialType.transparency,
-        child: Container(
-          child: SizedBox(
-            child: _buildMainColumn(),
-          ),
-        ),
+        child: _buildMainColumn(listSongs),
       ),
     );
   }
 }
 
-Widget _buildMainColumn() => ListView(
-      children: [
-        _buildSongItem('Sweet Memories', 'December 29 Pre-Launch',
-            Color.fromARGB(255, 47, 128, 23)),
-        _buildSongItem('A Day Dream', 'December 29 Pre-Launch',
-            Color.fromARGB(255, 3, 158, 162)),
-        _buildSongItem('Mind Explore', 'December 29 Pre-Launch',
-            Color.fromARGB(255, 240, 146, 53)),
-      ],
-    );
+Widget _buildMainColumn(List<io.FileSystemEntity> list) => ListView.builder(
+    itemCount: list.length,
+    itemBuilder: (BuildContext context, int index) {
+      var file = list[index];
+      var path = file.path;
+      var filename = path.split("/").last;
+      return _buildSongItem(filename, filename, Colors.deepOrange, path, index);
+    });
 
-Widget _buildSongItem(String title, String description, Color color) =>
+Widget _buildSongItem(String title, String description, Color color,
+        String path, int index) =>
     Container(
       padding: EdgeInsets.only(
         top: 10,
@@ -61,8 +87,24 @@ Widget _buildSongItem(String title, String description, Color color) =>
               borderRadius: new BorderRadius.circular(15),
             ),
             child: new TextButton(
-              onPressed: null,
-              child: Icon(Icons.play_arrow_outlined),
+              onPressed: () async {
+                await Data.audioPlayer.setSourceUrl(path);
+                if (Data.currentSongIndex != index) {
+                  await Data.audioPlayer.resume();
+                } else {
+                  if (Data.isPlaying) {
+                    await Data.audioPlayer.pause();
+                  } else {
+                    await Data.audioPlayer.resume();
+                  }
+                }
+                Data.currentSongIndex = index;
+              },
+              child: index != Data.currentSongIndex
+                  ? Icon(Icons.play_arrow)
+                  : Data.isPlaying
+                      ? Icon(Icons.pause)
+                      : Icon(Icons.play_arrow),
             ),
           ),
           Expanded(

@@ -23,7 +23,6 @@ class _DownloaderPageState extends State<DownloaderPage> {
       case 7:
         return mass[6];
     }
-
     return "";
   }
 
@@ -44,7 +43,7 @@ class _DownloaderPageState extends State<DownloaderPage> {
               ),
               IconButton(
                 onPressed: () async {
-                  final uri = Uri.https('32fd-62-217-191-21.eu.ngrok.io',
+                  final uri = Uri.https('fe99-62-217-191-21.eu.ngrok.io',
                       '/YandexMusic/GetSongById/', {'idSong': getIdSongByLink(link)});
 
                   var response = await http.get(uri);
@@ -58,7 +57,7 @@ class _DownloaderPageState extends State<DownloaderPage> {
 
                   var appDocDir = await getApplicationDocumentsDirectory();
                   String appDocPath = appDocDir.path;
-                  var file = new File('$appDocPath\\$name.mp3');
+                  var file = new File('$appDocPath\\music\\$name.mp3');
 
                   file.writeAsBytes(base64);
                 },
