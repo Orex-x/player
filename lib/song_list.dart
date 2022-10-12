@@ -1,8 +1,6 @@
-import 'dart:ffi';
 import 'dart:io' as io;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'models/data.dart';
 
@@ -72,7 +70,7 @@ Widget _buildMainColumn(List<io.FileSystemEntity> list) => ListView.builder(
 Widget _buildSongItem(String title, String description, Color color,
         String path, int index) =>
     Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
         left: 30,
         right: 30,
@@ -82,11 +80,11 @@ Widget _buildSongItem(String title, String description, Color color,
           Container(
             width: 50,
             height: 50,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: color,
-              borderRadius: new BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: new TextButton(
+            child: TextButton(
               onPressed: () async {
                 await Data.audioPlayer.setSourceUrl(path);
                 if (Data.currentSongIndex != index) {
@@ -101,26 +99,26 @@ Widget _buildSongItem(String title, String description, Color color,
                 Data.currentSongIndex = index;
               },
               child: index != Data.currentSongIndex
-                  ? Icon(Icons.play_arrow)
+                  ? const Icon(Icons.play_arrow)
                   : Data.isPlaying
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+                      ? const Icon(Icons.pause)
+                      : const Icon(Icons.play_arrow),
             ),
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(left: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                    style: const TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
                   Text(
                     description,
-                    style: TextStyle(color: Colors.black, fontSize: 12.0),
+                    style: const TextStyle(color: Colors.black, fontSize: 12.0),
                   ),
                 ],
               ),
@@ -129,7 +127,7 @@ Widget _buildSongItem(String title, String description, Color color,
           Container(
             width: 30,
             alignment: Alignment.centerRight,
-            child: Icon(Icons.menu),
+            child: const Icon(Icons.menu),
           ),
         ],
       ),

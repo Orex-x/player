@@ -1,9 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:player/player.dart';
 
 import 'downloader_page.dart';
-import 'models/data.dart';
 import 'song_list.dart';
 
 void main() => runApp(const MyApp());
@@ -30,12 +28,7 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-
-
-
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     ListSongs(),
     Player(),
