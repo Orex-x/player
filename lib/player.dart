@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'models/data.dart';
@@ -43,14 +41,13 @@ class _PlayerState extends State<Player> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Material(
         type: MaterialType.transparency,
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -103,8 +100,8 @@ class _PlayerState extends State<Player> {
                 radius: 35,
                 child: IconButton(
                   icon: Data.isPlaying
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+                      ? const Icon(Icons.pause)
+                      : const Icon(Icons.play_arrow),
                   iconSize: 50,
                   onPressed: () async {
                     if (!mounted) return;

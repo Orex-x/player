@@ -31,40 +31,40 @@ class _DownloaderPageState extends State<DownloaderPage> {
     return Scaffold(
       body: Material(
         type: MaterialType.transparency,
-        child: Container(
-          child: Column(
-            children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    link = value;
-                  });
-                },
-              ),
-              IconButton(
-                onPressed: () async {
-                  final uri = Uri.https('fe99-62-217-191-21.eu.ngrok.io',
-                      '/YandexMusic/GetSongById/', {'idSong': getIdSongByLink(link)});
+        child: Column(
+          children: [
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  link = value;
+                });
+              },
+            ),
+            IconButton(
+              onPressed: () async {
+                final uri = Uri.https(
+                    'fe99-62-217-191-21.eu.ngrok.io',
+                    '/YandexMusic/GetSongById/',
+                    {'idSong': getIdSongByLink(link)});
 
-                  var response = await http.get(uri);
+                var response = await http.get(uri);
 
-                  var decodedResponse = jsonDecode(response.body);
+                var decodedResponse = jsonDecode(response.body);
 
-                  var name = decodedResponse["name"];
-                  var data = decodedResponse["data"];
+                var name = decodedResponse["name"];
+                var data = decodedResponse["data"];
 
-                  var base64 = base64Decode(data);
+                var base64 = base64Decode(data);
 
-                  var appDocDir = await getApplicationDocumentsDirectory();
-                  String appDocPath = appDocDir.path;
-                  var file = new File('$appDocPath\\music\\$name.mp3');
+                var appDocDir = await getApplicationDocumentsDirectory();
+                String appDocPath = appDocDir.path;
+                var file = File('$appDocPath\\music\\$name.mp3');
 
-                  file.writeAsBytes(base64);
-                },
-                icon: Icon(Icons.download),
-              )
-            ],
-          ),
+                file.writeAsBytes(base64);
+              },
+              icon: const Icon(Icons.download),
+            )
+          ],
         ),
       ),
     );
